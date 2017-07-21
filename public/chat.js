@@ -17,14 +17,25 @@ btn.addEventListener("click",function(){
   message.value = '';
 
 });
+
 message.addEventListener('keypress', function(){
   socket.emit('typing',handle.value);
+});
+
+message.addEventListener('keydown',function(event){
+  if (event.keyCode == 13) {
+    socket.emit('chat', {
+      message: message.value,
+      handle: handle.value
+    });
+    message.value = '';
+  }
 });
 
 //listen events
 socket.on('chat', function(data){
   feedback.innerHTML = '';
-  output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message +"</p>";
+  output.innerHTML = "<p><strong>" + data.handle + ": </strong>" + data.message +"</p>" + output.innerHTML;
 });
 
 socket.on('typing', function(data){
